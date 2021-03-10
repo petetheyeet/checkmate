@@ -1,34 +1,51 @@
 
+
 <body>
     <div id='headerContainer'>
-        <button 
-            mat-raised-button color=""
-            class="toolbarButton" id='reset' (click)='resetBoard()'>Settings</button>
+        <button id='settingsButton'><img id="settingsImage" src="assets/images/managementNotHover.png"></button>
         <div id='title'>Check-Mate</div>
-        <button 
-            mat-raised-button color=""
-            class="toolbarButton" id='reset' (click)='resetBoard()'>Login</button>
+        <button id='loginButton'><img id="loginImage" src="assets/images/loginNotHover.png"></button>
     </div>
     <div id='boardContainer'>
         <div id='controlBox'>
             <button 
             mat-raised-button color=""
             id='reset' 
-            class="toolbarButton" (click)='resetBoard()'>Reset</button>
+            class="toolbarButton" (click)="resetBoard()">Reset</button>
             <button 
             mat-raised-button color=""
-            class="toolbarButton" id='reset' (click)='resetBoard()'>New Puzzle</button>
+            class="toolbarButton" id='reset'>New Puzzle</button>
             <button 
             mat-raised-button color=""
-            class="toolbarButton" id='reset' (click)='resetBoard()'>Load Custom</button>
+            class="toolbarButton" id='reset' (click)="setCustomer()">Load Custom</button>
+            <button 
+            mat-raised-button color=""
+            class="toolbarButton" id='reset' (click)="flipBoard()">Reverse</button>
         </div>
         <div id="centerBoardBox">
-            <div id="sideControlBox"></div>
-            <ngx-chess-board #board id='board'></ngx-chess-board>
+            
+            <div id="sideControlBox">
+                <div id="sideControlBoxHeader"><div>High Scores</div></div>
+                <mat-list style="overflow: auto; height: 80%;">
+                    <mat-list-item *ngFor="let score of scores"
+                    style="background-color: darkgrey; 
+                    border: solid; 
+                    border-color: rgb(53, 53, 53);;
+                    width: 90%;">
+                        <h3 matLine>{{score.name}}</h3>
+                        <p matline>{{score.score}}</p>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <ngx-chess-board #board id='board'
+            (moveChange) = "changeReg()"
+            [pieceIcons]="icons"
+            [darkTileColor]="darkTileColorGray"
+            [lightTileColor]="lightTileColorGray"></ngx-chess-board>
             <div id="sideControlBox"></div>
         </div>
         <div id='entryBox'>
-            <textarea id="enterSituation" [ngModel]="situation" (ngModelChange)="loadSituation($event)">
+            <textarea id="enterSituation" [(ngModel)]="situation" (ngModelChange)="loadCustom($event)">
     
             </textarea>
         </div>
