@@ -1,0 +1,20 @@
+{
+  "name": "checkmate",
+  "description": "",
+  "main": "",
+  "authors": [
+    "petetheyeet <peter@team7.tech>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/petetheyeet/checkmate",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-chessboard": "theborakompanioni/angular-chessboard#^0.0.7"
+  }
+}
