@@ -3,7 +3,10 @@ import { Component, Output, ViewChild } from '@angular/core';
 import { NgxChessBoardService, PieceIconInput, NgxChessBoardComponent } from 'ngx-chess-board';
 
 
+
 import { Score, SCORES } from '../score';
+import { Problem } from './problem';
+import { ProblemsService } from './services/problems.service';
 
 
 @Component({
@@ -12,14 +15,21 @@ import { Score, SCORES } from '../score';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
+  
+
+  Problems = Array();
   title = 'checkmate';
-
   situation: any;
-
   sitrep: string;
-
   scores = SCORES;
   selectedScore?: Score;
+  counter = 0;
+  public fen ="";
+  public darkTileColorGray = "rgb(53, 53, 53)";
+  public lightTileColorGray = "darkgray";
+
+  @ViewChild('board', {static: false}) boardManager: NgxChessBoardComponent | undefined;
 
   icons: PieceIconInput = {
     blackBishopUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg',
@@ -36,31 +46,39 @@ export class AppComponent {
     whiteRookUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg'
 };
 
-  //board: NgxChessBoardView;
+  
 
-  constructor(private ngxChessBoardService: NgxChessBoardService) {
-    //this.board;
+  constructor(private ngxChessBoardService: NgxChessBoardService,
+    private problemService: ProblemsService) {
+    
     this.boardManager;
     this.sitrep = "";
     this.scores.sort((a,b) => b.score - a.score);
   }
 
   ngOnInit() {
-
-    //ngxPieceIconInput
-
+    this.populateProblems();
   }
 
-  //@ViewChild('board', {static: false}) board: NgxChessBoardView | undefined;
+  populateProblems() {
+    this.problemService.getProblemList().valueChanges().subscribe(res => {
+      console.log(res);
+    });
+    let problemRes = this.problemService.getProblemList();
+    problemRes.snapshotChanges().subscribe(res => {
+      this.Problems = Array();
+      res.forEach(item => {
+        let p = item.payload.toJSON();
+        
+        this.Problems.push(p as Problem);
+      })
+    })
+    console.log(this.Problems);
+  }
 
-  public fen ="";
+  
 
-  public darkTileColorGray = "rgb(53, 53, 53)";
-  public lightTileColorGray = "darkgray";
-
-  @ViewChild('board', {static: false}) boardManager: NgxChessBoardComponent | undefined;
-
-  //@ViewChild('board') boardManager: NgxChessBoardComponent;
+  
 
   resetBoard() {
     this.boardManager?.reset();

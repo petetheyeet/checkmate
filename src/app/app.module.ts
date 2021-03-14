@@ -9,7 +9,12 @@ import { MatButtonModule } from '@angular/material/button'
 import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
+import { environment } from 'src/environments/environment.prod';
 
 @NgModule({
   declarations: [
@@ -24,6 +29,11 @@ import { MatListModule } from '@angular/material/list';
     MatButtonModule,
     FormsModule,
     
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule, // firestore
+    AngularFireAuthModule, // auth
+    AngularFireStorageModule,
+
     MatListModule,
  
     
