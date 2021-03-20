@@ -1,0 +1,65 @@
+
+<body>
+    <div id="mainDiv">
+        <div id='headerContainer'>
+            <button id='settingsButton'><img id="settingsImage" src="assets/images/managementNotHover.png"></button>
+            <div id='title'><h1 id='titleHeader'>Check-Mate</h1></div>
+            <button id='loginButton'><img id="loginImage" src="assets/images/loginNotHover.png"></button>
+        </div>
+        <div id='boardContainer'>
+            <div id='controlBox'>
+                <button 
+                mat-raised-button color=""
+                id='reset' 
+                class="toolbarButton" (click)="resetBoard()">Reset</button>
+                <button 
+                mat-raised-button color=""
+                class="toolbarButton" id='reset'>New Puzzle</button>
+                <button 
+                mat-raised-button color=""
+                class="toolbarButton" id='reset' (click)="setCustomer()">Load Custom</button>
+                <button 
+                mat-raised-button color=""
+                class="toolbarButton" id='reset' (click)="flipBoard()">Reverse</button>
+            </div>
+            <div id="sideControlBox">
+                <div id="sideControlBoxHeader"><div>High Scores</div></div>
+                <mat-list style="overflow: auto; height: 80%;">
+                    <mat-list-item *ngFor="let score of scores"
+                    style="background-color: darkgrey; 
+                    border: solid; 
+                    border-color: rgb(53, 53, 53);
+                    width: 90%;">
+                        <h3 style="color: rgb(53, 53, 53);"matLine>{{score.name}}</h3>
+                        <p matline style="color:rgb(53, 53, 53);">{{score.score}}</p>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <div id="centerBoardBox">
+                <ngx-chess-board #board id='board'
+                (moveChange) = "changeReg()"
+                [pieceIcons]="icons"
+                [darkTileColor]="darkTileColorGray"
+                [lightTileColor]="lightTileColorGray"></ngx-chess-board>
+                
+            </div>
+            <div id="sideControlBoxRight">
+                <button 
+            mat-raised-button color=""
+            class="toolbarButton" id='reset' (click)="routeOpenings()">View Openings</button>
+            </div>
+        </div>
+        <div id='entryBox'>
+            <textarea id="enterSituation" [(ngModel)]="situation" (ngModelChange)="loadCustom($event)">
+    
+            </textarea>
+        </div>
+    </div>
+    
+    
+
+
+</body>
+
+
+<router-outlet></router-outlet>

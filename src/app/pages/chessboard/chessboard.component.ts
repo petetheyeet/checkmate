@@ -1,30 +1,21 @@
-import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { Component, Output, ViewChild } from '@angular/core';
-import { NgxChessBoardService, PieceIconInput, NgxChessBoardComponent } from 'ngx-chess-board';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxChessBoardComponent, NgxChessBoardService, PieceIconInput } from 'ngx-chess-board';
+import { Score, SCORES } from 'src/score';
 
-
-import { Score, SCORES } from '../score';
-import { Problem } from './problem';
-import { ProblemsService } from './services/problems.service';
-
-
+import { Problem } from 'src/app/problem';
+import { ProblemsService } from 'src/app/services/problems.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-chessboard',
+  templateUrl: './chessboard.component.html',
+  styleUrls: ['./chessboard.component.scss']
 })
-export class AppComponent {
-  
+export class ChessboardComponent implements OnInit, OnDestroy {
 
-
-  constructor(
-    private ngxChessBoardService: NgxChessBoardService,
+  constructor(private ngxChessBoardService: NgxChessBoardService,
     private problemService: ProblemsService,
-    private router: Router,
-   
-    ) { 
+    private router: Router) { 
       this.boardManager;
     this.sitrep = "";
     this.scores.sort((a,b) => b.score - a.score);
@@ -33,17 +24,6 @@ export class AppComponent {
   ngOnInit(): void {
     this.populateProblems();
   }
-  
-  //MODAL STUFF 
-
-  // Get the modal
-  
-
-  // Get the button that opens the modal
-  btn = document.getElementById("myBtn");
-  
-  // Get the <span> element that closes the modal
-  span = document.getElementsByClassName("close")[0];
 
   Problems = Array();
   title = 'checkmate';
@@ -100,20 +80,10 @@ export class AppComponent {
   }
 
   routeOpenings() {
-    
-    let modal = document.getElementById("myModal");
-    if(modal != null) {
-      modal.style.display = "block";
-    }
-
+    this.router.navigateByUrl('bongcloud');
+    this.ngOnDestroy();
   }
   
-  closeModal() {
-    let modal = document.getElementById("myModal");
-    if(modal != null) {
-      modal.style.display = "none";
-    }
-  }
 
   resetBoard() {
     this.boardManager?.reset();
@@ -151,8 +121,4 @@ export class AppComponent {
     console.log(this.boardManager?.getFEN()); 
   }
 
-  
-
 }
-
-

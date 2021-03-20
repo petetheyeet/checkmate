@@ -26,7 +26,7 @@
     "firebase": "^8.3.0",
     "ng2-chessboard": "^1.0.3",
     "ngx-chess-board": "^2.0.9",
-    "rxjs": "~6.6.0",
+    "rxjs": "^6.6.6",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
   },

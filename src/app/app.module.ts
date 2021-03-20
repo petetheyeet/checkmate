@@ -15,10 +15,20 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { environment } from 'src/environments/environment.prod';
+import { SicilianComponent } from './openings/sicilian/sicilian.component';
+import { BongcloudComponent } from './openings/bongcloud/bongcloud.component';
+import { KingsComponent } from './openings/kings/kings.component';
+import { QueensComponent } from './openings/queens/queens.component';
+import { ChessboardComponent } from './pages/chessboard/chessboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    SicilianComponent,
+    BongcloudComponent,
+    KingsComponent,
+    QueensComponent,
+    ChessboardComponent,
     
   ],
   imports: [
@@ -44,7 +54,6 @@ import { environment } from 'src/environments/environment.prod';
 export class AppModule { 
 
   
-
 
 }
 
