@@ -4,7 +4,7 @@
         <div id='headerContainer'>
             <button id='settingsButton'><img id="settingsImage" src="assets/images/managementNotHover.png"></button>
             <div id='title'><h1 id='titleHeader'>Check-Mate</h1></div>
-            <button id='loginButton'><img id="loginImage" src="assets/images/loginNotHover.png"></button>
+            <!--<button id='loginButton'><img id="loginImage" src="assets/images/loginNotHover.png"></button>-->
         </div>
         <div id='boardContainer'>
             <div id='controlBox'>
@@ -14,24 +14,24 @@
                 class="toolbarButton" (click)="resetBoard()">Reset</button>
                 <button 
                 mat-raised-button color=""
-                class="toolbarButton" id='reset'>New Puzzle</button>
-                <button 
-                mat-raised-button color=""
-                class="toolbarButton" id='reset' (click)="setCustomer()">Load Custom</button>
+                class="toolbarButton" (click)="startChallenge()" id='reset'>Begin Challenge</button>
                 <button 
                 mat-raised-button color=""
                 class="toolbarButton" id='reset' (click)="flipBoard()">Reverse</button>
+                <div id="currentScore" style="padding-top: 10px;">
+                  <h2>Score: {{currentScore}}</h2>
+                </div>
             </div>
             <div id="sideControlBox">
-                <div id="sideControlBoxHeader"><div>High Scores</div></div>
-                <mat-list style="overflow: auto; height: 80%;">
-                    <mat-list-item *ngFor="let score of scores"
+              <div id="sideControlBoxHeader"><div>High Scores</div></div>
+                <mat-list style="overflow: auto; height: 80%; width: 100%;">
+                    <mat-list-item *ngFor="let score of Scores"
                     style="background-color: darkgrey; 
                     border: solid; 
                     border-color: rgb(53, 53, 53);
                     width: 90%;">
-                        <h3 style="color: rgb(53, 53, 53);"matLine>{{score.name}}</h3>
-                        <p matline style="color:rgb(53, 53, 53);">{{score.score}}</p>
+                        <h3 style="color: rgb(53, 53, 53);"matLine>{{score.username}}</h3>
+                        <p matline style="color:rgb(53, 53, 53);">{{score.scoreValue}}</p>
                     </mat-list-item>
                 </mat-list>
             </div>
@@ -43,19 +43,28 @@
                 [lightTileColor]="lightTileColorGray"></ngx-chess-board>
                 
             </div>
-            <div id="sideControlBoxRight">
-                <button 
-            mat-raised-button color=""
-            class="toolbarButton" id='reset' (click)="routeOpenings()">View Openings</button>
-            </div>
-        </div>
-        <div id='entryBox'>
-            <textarea id="enterSituation" [(ngModel)]="situation" (ngModelChange)="loadCustom($event)">
-    
-            </textarea>
+            
         </div>
     </div>
     
+    <div class="succModal" id="mySuccModal">
+      <div class="succModal-content">
+          <h1>Problem Complete!</h1>
+      </div>
+    </div>
+
+    <div class="scoreModal" id="myScoreModal">
+      <div class="scoreModal-content">
+          <h1>Better Luck Next Time!</h1>
+          <h2>Final Score: {{currentScore}}</h2>
+          <label for="usernameInput">Name: </label>
+          <input type="text" id="usernameInput" class="scoreInput" name="usernameInput"><br>
+          <button 
+                mat-raised-button color=""
+                class="scoreClose" (click)="submitScore()" id='reset'>Submit Score</button>
+      </div>
+    </div>
+
     <div class="modal" id="myModal">
         <div class="modal-content">
             <span class="close" (click)="closeModal()">&times;</span>

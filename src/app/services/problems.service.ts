@@ -12,7 +12,7 @@ export class ProblemsService {
   constructor(private db: AngularFireDatabase) { }
 
   getProblemList() {
-    this.problemListRef = this.db.list('/problem');
+    this.problemListRef = this.db.list('/problems');
     return this.problemListRef;
   }
 
