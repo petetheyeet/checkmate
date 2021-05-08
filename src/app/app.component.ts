@@ -1,5 +1,5 @@
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { Component, Output, ViewChild } from '@angular/core';
+import { Component, Output, Pipe, ViewChild } from '@angular/core';
 import { NgxChessBoardService, PieceIconInput, NgxChessBoardComponent } from 'ngx-chess-board';
 import { Router } from '@angular/router';
 
@@ -10,6 +10,7 @@ import { ProblemsService } from './services/problems.service';
 import { ScoresService } from './services/scores.service';
 import { Score } from './score';
 import { i18nMetaToJSDoc } from '@angular/compiler/src/render3/view/i18n/meta';
+import { Move } from './move';
 
 
 
@@ -27,7 +28,6 @@ export class AppComponent {
     private problemService: ProblemsService,
     private router: Router,
     private scoreService: ScoresService
-   
     ) { 
       this.boardManager;
       this.sitrep = "";
@@ -56,6 +56,8 @@ export class AppComponent {
   // Get the <span> element that closes the modal
   span = document.getElementsByClassName("close")[0];
 
+  myCanvas = document.getElementsByClassName("succModal");
+
   isChallengeOngoing = false;
 
   currentScore = 0;
@@ -70,6 +72,16 @@ export class AppComponent {
 
   isComputerTurn = false;
 
+  currentSolution = Array();
+
+  //settings
+
+  solutionsVisibility = false;
+  cheaterMode = false;
+  soundAudible = true;
+
+  cheaterModeEnabledForGame = false;
+  
   Problems = Array();
   title = 'checkmate';
   situation: any;
@@ -163,12 +175,6 @@ export class AppComponent {
     console.log(this.Problems);
   }
 
-  requestUserNameForScore() {
-    
-    //TODO
-
-  }
-
   ngOnDestroy() {
 
   }
@@ -189,7 +195,22 @@ export class AppComponent {
     }
   }
 
+  openSettingsModal() {
+    let modal = document.getElementById("mySettingsModal");
+    if(modal != null) {
+      modal.style.display = "block";
+    }
+  }
+
+  closeSettingsModal() {
+    let modal = document.getElementById("mySettingsModal");
+    if(modal != null) {
+      modal.style.display = "none";
+    }
+  }
+
   triggerSuccModal() {
+    this.playSound(3);
     let modal = document.getElementById("mySuccModal");
     if(modal != null) {
       modal.style.display = "block";
@@ -198,7 +219,7 @@ export class AppComponent {
           modal.style.display = "none"; 
         }
         
-      }, 4000);
+      }, 3000);
       //this.sleep(4000);
       
     }
@@ -208,36 +229,145 @@ export class AppComponent {
     let modal = document.getElementById("myScoreModal");
     if(modal != null) {
       modal.style.display = "block";
+      let solutionsModal = document.getElementById("myScoreSolution");
+      console.log(this.solutionsVisibility);
+      if(this.solutionsVisibility && solutionsModal != null) {
+        console.log("SHould be visible");
+        solutionsModal.style.display = "block"
+      }
       //setTimeout(() => { }, 2000);
       //modal.style.display = "none";
     }
+  }
+
+  toggleSolutionsVis() {
+    this.solutionsVisibility = !this.solutionsVisibility;
+    console.log("Solution Visibility: " + this.solutionsVisibility);
+  }
+
+  toggleSounds() {
+    this.soundAudible = !this.soundAudible;
+    console.log("Sounds: " + this.soundAudible);
+  }
+
+  toggleCheaterMode() {
+    this.cheaterMode = !this.cheaterMode;
+    console.log("Cheater Mode: " + this.cheaterMode);
+
+    if(this.isChallengeOngoing && this.cheaterMode) {
+      this.cheaterModeEnabledForGame = true; 
+    }
+
+    if(this.cheaterMode) {
+      let modal = document.getElementById("answers");
+      if(modal != null) {
+        modal.style.display = "block";
+      }
+    }
+    else {
+      let modal = document.getElementById("answers");
+      if(modal != null) {
+        modal.style.display = "none";
+      }
+    }
+  }
+
+  playSound(choice: number) {
+
+    if(this.soundAudible) {
+      let audio = new Audio();
+      audio.volume = 0.2;
+      switch(choice) {
+        case 1: {
+          audio.src = "/assets/sounds/moveMadeDefault.wav";
+          break;
+        }
+        case 2: {
+          //audio.src = "/assets/sounds/failDefault.wav";
+          //break;
+
+          var r = Math.floor(Math.random() * 100) + 1;
+          if(r < 5) {
+            audio.src = "/assets/sounds/failAltMungusMeeting.mp3";
+          } else if(r < 50) {
+            audio.src = "/assets/sounds/failAltRecord.mp3";
+          } else if(r < 90) {
+            audio.src = "/assets/sounds/failAltLeagueWarn.mp3";
+          } else if(r < 100) {
+            audio.src = "/assets/sounds/failAltMungusMeeting.mp3";
+          }
+          else {
+            audio.src = "/assets/sounds/failDefault.mp3";
+          }
+          break;
+
+        }
+        case 3: {
+          var r = Math.floor(Math.random() * 100) + 1;
+          if(r < 33) {
+            audio.src = "/assets/sounds/victoryMainRoblox.mp3";
+          } else if(r < 66) {
+            audio.src = "/assets/sounds/victoryAltValorantAce.mp3";
+          }
+          else {
+            audio.src = "/assets/sounds/victoryAltParty.mp3";
+          }
+          break;
+        }
+        default: {
+          audio.src = "/assets/sounds/moveMadeDefault.wav";
+          break;
+        }
+      }
+
+      audio.load();
+      audio.play();
+    }
+
   }
 
   submitScore() {
 
     try {
       
-      let userName = (<HTMLInputElement>document.getElementById('usernameInput')).value; //TODO GET USERNAME PROMPT
+      if(!this.cheaterModeEnabledForGame) {
+        let userName = (<HTMLInputElement>document.getElementById('usernameInput')).value; 
 
-      if(userName != null) {
-        let tempScore = new Score();
-        tempScore.uuid = v4.toString();
-        tempScore.username = userName;
-        tempScore.scoreValue = this.currentScore;
-        tempScore.dateTime = Math.round(+new Date()/1000);
-        this.scoreService.createScore(tempScore).then(res => {
-          //TODO CLEANUP
-          this.populateScores();
-          this.currentScore = 0;
-          this.isChallengeOngoing = false;
-          let modal = document.getElementById("myScoreModal");
-          if(modal != null) {
-            modal.style.display = "none";
-            this.boardManager?.reset();
-            //setTimeout(() => { }, 2000);
-            //modal.style.display = "none";
+        if(userName != null) {
+          let tempScore = new Score();
+          tempScore.uuid = v4.toString();
+          tempScore.username = userName;
+          tempScore.scoreValue = this.currentScore;
+          tempScore.dateTime = Math.round(+new Date()/1000);
+          this.scoreService.createScore(tempScore).then(res => {
+            //TODO CLEANUP
+            this.populateScores();
+            this.currentScore = 0;
+            this.isChallengeOngoing = false;
+            let modal = document.getElementById("myScoreModal");
+            if(modal != null) {
+              modal.style.display = "none";
+              this.boardManager?.reset();
+              //setTimeout(() => { }, 2000);
+              //modal.style.display = "none";
+            }
+          })
+        }
+      }
+      else {
+        this.currentScore = 0;
+        this.isChallengeOngoing = false;
+        let modal = document.getElementById("myScoreModal");
+        if(modal != null) {
+           modal.style.display = "none";
+           this.boardManager?.reset();
+          //setTimeout(() => { }, 2000);
+          //modal.style.display = "none";
+          let solutionText = document.getElementById("scoreSolutionText");
+          if(solutionText != null) {
+            solutionText.innerHTML = "";
           }
-        })
+        }
       }
       
     }
@@ -288,7 +418,7 @@ export class AppComponent {
 
   changeReg() {
     console.log(this.boardManager?.getFEN());
-    
+    this.playSound(1);
     if(this.isChallengeOngoing && this.isComputerTurn == false) {
 
       let hist = this.boardManager?.getMoveHistory();
@@ -306,7 +436,7 @@ export class AppComponent {
 
           if(moveOrderLen == this.moveNumber + 1) {
             this.triggerSuccModal();
-
+            this.boardManager?.reset();
             this.nextProblem();
           }
           else {
@@ -315,12 +445,16 @@ export class AppComponent {
               this.boardManager?.move(this.randomProblem.moveOrder[1 + this.moveNumber].combined);
               this.isComputerTurn = false;
               this.moveNumber = this.moveNumber + 2;
+              this.playSound(1);
             }
           }         
 
 
         }
         else {
+          this.currentSolution = this.randomProblem.moveOrder;
+          this.playSound(2);
+          console.log(this.currentSolution);
           this.failChallenge();
         }
       }
@@ -328,7 +462,23 @@ export class AppComponent {
 
   }
 
+  displayCurrentSolution() {
+    var retSolution = "";
+    if(this.randomProblem.moveOrder != null) {
+      //console.log(this.randomProblem.moveOrder.length);
+      for(var i = 0; i < this.randomProblem.moveOrderLength; i++) {
+        console.log(this.randomProblem.moveOrder[i]);
+        retSolution = retSolution + (i + 1) + ". " + 
+        this.randomProblem.moveOrder[i].combined + "    ";
+      }
+      console.log(retSolution);
+    }
+    
+    return retSolution;
+  }
+
   startChallenge() {
+    this.cheaterModeEnabledForGame = this.cheaterMode;
     this.randomProblem = this.Problems[Math.floor(Math.random() * this.Problems.length)];
     console.log(this.randomProblem);
     if(this.randomProblem.FEN != null) {
@@ -342,6 +492,7 @@ export class AppComponent {
 
   failChallenge() {
     console.log("FAILURE");
+    console.log(this.currentSolution);
     this.openScoreModal();
 
     this.boardManager?.reset();
@@ -366,5 +517,6 @@ export class AppComponent {
   }
 
 }
+
 
 

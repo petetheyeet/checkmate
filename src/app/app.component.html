@@ -2,7 +2,7 @@
 <body>
     <div id="mainDiv">
         <div id='headerContainer'>
-            <button id='settingsButton'><img id="settingsImage" src="assets/images/managementNotHover.png"></button>
+            <button id='settingsButton' (click)="openSettingsModal()"><img id="settingsImage" src="assets/images/managementNotHover.png"></button>
             <div id='title'><h1 id='titleHeader'>Check-Mate</h1></div>
             <!--<button id='loginButton'><img id="loginImage" src="assets/images/loginNotHover.png"></button>-->
         </div>
@@ -14,13 +14,15 @@
                 class="toolbarButton" (click)="resetBoard()">Reset</button>
                 <button 
                 mat-raised-button color=""
-                class="toolbarButton" (click)="startChallenge()" id='reset'>Begin Challenge</button>
+                class="toolbarButton" id="startChallengeButton" (click)="startChallenge()" id='reset'>Begin Challenge</button>
                 <button 
                 mat-raised-button color=""
                 class="toolbarButton" id='reset' (click)="flipBoard()">Reverse</button>
                 <div id="currentScore" style="padding-top: 10px;">
                   <h2>Score: {{currentScore}}</h2>
                 </div>
+                <br>
+                
             </div>
             <div id="sideControlBox">
               <div id="sideControlBoxHeader"><div>High Scores</div></div>
@@ -29,9 +31,9 @@
                     style="background-color: darkgrey; 
                     border: solid; 
                     border-color: rgb(53, 53, 53);
-                    width: 90%;">
-                        <h3 style="color: rgb(53, 53, 53);"matLine>{{score.username}}</h3>
-                        <p matline style="color:rgb(53, 53, 53);">{{score.scoreValue}}</p>
+                    width: 98%;">
+                        <h2 style="color: rgb(53, 53, 53); font-weight: bolder; font-size: 25px;"matLine>{{score.username}}</h2>
+                        <h2 matline style="color:rgb(53, 53, 53);">{{score.scoreValue}} Completed</h2>
                     </mat-list-item>
                 </mat-list>
             </div>
@@ -39,9 +41,10 @@
                 <ngx-chess-board #board id='board'
                 (moveChange) = "changeReg()"
                 [pieceIcons]="icons"
+                [size] = 600
                 [darkTileColor]="darkTileColorGray"
                 [lightTileColor]="lightTileColorGray"></ngx-chess-board>
-                
+                <div class="answers" id="answers"><h2>Solution: {{displayCurrentSolution()}}</h2></div>
             </div>
             
         </div>
@@ -49,7 +52,37 @@
     
     <div class="succModal" id="mySuccModal">
       <div class="succModal-content">
-          <h1>Problem Complete!</h1>
+          <h1 class="succModal-text">Problem Complete!</h1>
+      </div>
+    </div>
+
+    <div class="settingsModal" id="mySettingsModal">
+      <div class="settingsModal-content">
+        <span class="settingsClose" (click)="closeSettingsModal()">&times;</span>
+        <h1 class="settingsModal-text">Settings</h1>
+        <div style="background-color: gray; vertical-align: middle;">
+          <label text="Toggle" class="switch" style="margin-top: 20px;">
+            <input type="checkbox" (click)="toggleSolutionsVis()">
+            <span class="slider round"></span>
+          </label><h2 style="color: whitesmoke;">Solution Visibility</h2><br>
+        </div>
+        
+        <div style="background-color: gray; vertical-align: middle;">
+          <label text="Toggle" class="switch" style="margin-top: 20px;">
+            <input type="checkbox" (click)="toggleSounds()" checked>
+            <span class="slider round"></span>
+          </label><h2 style="color: whitesmoke;">Sound Effects</h2><br>
+        </div>
+
+
+
+        <div style="background-color: gray; vertical-align: middle;">
+          <label text="Toggle" class="switch" style="margin-top: 20px;">
+            <input type="checkbox" (click)="toggleCheaterMode()">
+            <span class="slider round"></span>
+          </label><h2 style="color: whitesmoke;">Cheater Mode</h2><br>
+        </div>
+        
       </div>
     </div>
 
@@ -57,6 +90,11 @@
       <div class="scoreModal-content">
           <h1>Better Luck Next Time!</h1>
           <h2>Final Score: {{currentScore}}</h2>
+          <div class="scoreSolution" id="myScoreSolution">
+            <h2 id="scoreSolutionText">
+              {{displayCurrentSolution()}}
+            </h2>
+          </div>
           <label for="usernameInput">Name: </label>
           <input type="text" id="usernameInput" class="scoreInput" name="usernameInput"><br>
           <button 

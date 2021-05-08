@@ -8,7 +8,7 @@ body {
 
 #mainDiv {
     display: grid;
-    grid-template-columns: 20vw 80vw;
+    grid-template-columns: 30vw 70vw;
     grid-template-rows: 10vh 70vh 10vh;
 }
 
@@ -88,7 +88,7 @@ body {
     background-color: lightgray;
 
     display: grid;
-    grid-template-columns: 5% 15% 60% 15% 5%;
+    grid-template-columns: 5% 25% 60% 5% 5%;
     grid-template-rows: 20% 60% 20%;
 
 }
@@ -140,10 +140,10 @@ body {
     
 
     
-        width: 85%;
+        width: 100%;
         height: 100%;
-        margin-left: 15px;
-        margin-right: 15px;
+        margin-left: 2px;
+        margin-right: 2px;
     
         justify-content: center;
         align-items: center;
@@ -176,8 +176,8 @@ body {
     
         width: 85%;
         height: 100%;
-        margin-left: 15px;
-        margin-right: 15px;
+        margin-left: 2px;
+        margin-right: 2px;
     
         justify-content: center;
         align-items: center;
@@ -266,11 +266,18 @@ mat-list {
   /* Modal Content */
   .succModal-content {
     background-color: #fefefe;
+    background-image: url("/assets/conf.gif");
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 300px;
+    height: 300px;
     text-align: center;
+    vertical-align: middle;
+  }
+
+  .succModal-text {
+      padding-top: 140px;
   }
   
   /* The Close Button */
@@ -283,6 +290,57 @@ mat-list {
   
   .succClose:hover,
   .succClose:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+/* SETTINGS MODAL */ 
+
+.settingsModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 20vh; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .settingsModal-content {
+    background-color: gray;
+    border: whitesmoke;
+    border-style: solid;
+    border-width: 5px;
+    border-radius: 5px;
+    margin: auto;
+    padding: 20px;
+    
+    width: 300px;
+    height: 500px;
+    text-align: center;
+    
+  }
+
+  .settingsModal-text {
+      color: whitesmoke;
+  }
+  
+  /* The Close Button */
+  .settingsClose {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .settingsClose:hover,
+  .settingsClose:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
@@ -304,6 +362,10 @@ mat-list {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   }
   
+  .answers {
+    display: none;
+  }
+
   /* Modal Content */
   .scoreModal-content {
     background-color: #fefefe;
@@ -332,6 +394,10 @@ mat-list {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+  }
+
+  .scoreSolution {
+    display: none;
   }
 
 .modal {
@@ -795,6 +861,67 @@ mat-list {
         cursor: default;
     }
     
+    /* SETTINGS */ 
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 45px;
+        height: 14px;
+      }
+      
+      .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+      
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+      
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+      
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+      
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+    .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
 
 
 
